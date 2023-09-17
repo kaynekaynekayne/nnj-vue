@@ -1,0 +1,64 @@
+<script>
+    export default{
+        //용도
+        내 위에 있는 template야...
+        여기 있는 애들 갖다 써라...
+
+        template가 뭔가를 쓰려면
+        script의 export default를 통해야함
+    }
+</script>
+
+
+1. npm install vuex@2.0.0 
+2. src/store/store.js 만들고
+
+    import Vue from 'vue';
+    import Vuex from 'vuex';
+
+    Vue.use(Vuex);
+
+    export const store=new Vuex.Store({
+        state:{
+            products:[
+                {name:"banana skin", price:20},
+                {name:"shiny star", price:40},
+                {name:"green shells", price:60},
+                {name:"red shells", price:80},
+            ] 
+            //원래 App.vue data(){}에 있던 아이
+        }
+    })
+
+
+3. 전역적으로 쓰기 위해서 main.js 손대야 함
+
+    import { store } from './store/store'
+    new Vue({
+    render: h => h(App),
+    store,
+    }).$mount('#app')
+
+
+4. 더이상 App을 통해서 넘겨주지 않아도 되니까 props 지워줌
+
+4-1. 필요한 컴포넌트에서 바로 꽂아줄거임
+
+5. <script>안에 computed:{} 만듦
+    computed:{ //데이터를 가공해서 쓸 때💥
+        products(){
+            return this.$store.state.products
+        }
+    }
+
+
+** 문제
+
+    <li v-for="product in saleProducts" :key="product.name">
+        <span class="name">{{product.name}}</span>
+        <span class="price">{{product.price}}</span>
+    </li>
+
+    50% 할인 말고 75% 할인으로 바꾸고 싶다 
+    이런 경우 컴포넌트 일일히 들어가서 고쳐야 하는 문제점이 있음
+    =>store에 getter 만듦
